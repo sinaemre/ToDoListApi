@@ -21,7 +21,11 @@ namespace ToDoListApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(ob => ob.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext")));
+            services.AddCors(x =>
+                x.AddDefaultPolicy(cf =>
+                    cf.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()));
+            services.AddDbContext<ApplicationDbContext>(ob => ob.UseSqlServer
+                (Configuration.GetConnectionString("ApplicationDbContext")));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -42,6 +46,8 @@ namespace ToDoListApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
